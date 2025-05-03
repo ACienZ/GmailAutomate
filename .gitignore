@@ -2,7 +2,7 @@
 __pycache__/
 .vscode/
 .cursor/
-logs/
+logs/*
 config/configs.yaml
 client_secret.json
 gmail_token.json
