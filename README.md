@@ -1,5 +1,9 @@
 # Gmail自动化助手
 
+## For English Version: [English README](README_EN.md)
+
+--------------
+
 本项目是一个Gmail自动化工具，用于自动读取收件箱中的未读邮件，从中筛选出学生的作业，下载附件并回复。
 
 ## 1. 环境设置
