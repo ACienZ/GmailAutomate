@@ -1,0 +1,10 @@
+.DS_Store
+__pycache__/
+.vscode/
+.cursor/
+logs/
+config/configs.yaml
+client_secret.json
+gmail_token.json
+client_secret.json.test
+gmail_token.json.test

@@ -1,0 +1,23 @@
+GMAIL:
+  SCOPES : [
+        'https://www.googleapis.com/auth/gmail.modify',
+        'https://www.googleapis.com/auth/gmail.settings.basic'
+    ]
+
+# ChatGPT API
+CHATGPT:
+  API_KEY: "XXX" # replace XXX by your OpenAI API KEY
+
+DEEPSEEK:
+  API_KEY: "XXX" # replace XXX by your DeepSeek API KEY
+
+ModelSettings:
+  base_url: "https://api.deepseek.com"
+  model: "deepseek-reasoner"
+
+AssignmentSettings:
+  assignment_number: "1"
+  assignment_save_path: "XXX"
+  deadline: "2025-05-02 08:00:00"
+  my_email: "XXX@gmail.com"
+  my_name: "XXX"
