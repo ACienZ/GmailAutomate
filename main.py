@@ -38,6 +38,7 @@ def gmail_automate(
             email_content = message.plain
         # not an email from student
         elif message.html:
+            print(f"Email: {subject}\n from {sender}, has html content. \n")
             continue
 
         # get email attachment
@@ -50,6 +51,7 @@ def gmail_automate(
                 # filename. You can download without saving with `attm.download()`
         # not an email from student
         else:
+            print(f"Email: {subject}\n from {sender}, has no attachments. \n")
             continue
 
         # 2. check whether the email is a student submitted assignment with gpt
@@ -63,7 +65,7 @@ def gmail_automate(
         """
 
         gpt_answer = get_gpt_answer(config, client, system_prompt, task_prompt, content)
-        print("Get OpenAI Answer:", gpt_answer)  # for test
+        print("Get GPT Answer:", gpt_answer, "\n")
 
         if gpt_answer["is_assignment"] != "true":
             continue
@@ -131,7 +133,7 @@ def gmail_automate(
 
                         # create a folder for current assignment
                         assignment_folder_name = (
-                            "Assignment_" + config.AssignmentSettings.assignment_number
+                            "Assignment" + config.AssignmentSettings.assignment_number
                         )
                         # check whether the assignment submitted after the deadline
                         # 将时间字符串转换为 datetime 对象
@@ -146,7 +148,7 @@ def gmail_automate(
 
                         if send_date_dt > deadline_dt:
                             assignment_folder_name = (
-                                "Assignment_"
+                                "Assignment"
                                 + config.AssignmentSettings.assignment_number
                                 + "_late"
                             )
@@ -254,11 +256,11 @@ def main():
         "whether_contain_other_questions": "false",
         "assignment_number": "1",
         "student_id": "1234567890", 
-        "student_first_name": "John",
+        "student_first_name": "JohnSwe",
         "student_last_name": "DOE"
     }
     Note that if you cannot find the assignmentNumber, studentId or studentName, you can just return "unknown" as the assignment_number, student_id, student_first_name or student_last_name.
-    As for the studentName, all the characters of the last name should be capitalized.
+    As for the studentName, all the characters of the last name MUST be capitalized, while all the characters other than the first character of the first name MUST be lowercase. (However, If a student's first name includes more than one word, you MUST capitalize the first character of each word, and the rest of the characters MUST be lowercase. And all the words of the first name MUST be connected WITHOUT any space or other characters. For example, if a student's first name is "John Swe", you should return "JohnSwe" as the student_first_name.)
 
     """
 
