@@ -176,6 +176,7 @@ def gmail_automate(
                                 ):
                                     attach.filename = (
                                         attach.filename.split(".")[0]
+                                        + "_"
                                         + str(counter)
                                         + "."
                                         + attach.filename.split(".")[1]

@@ -25,7 +25,11 @@ def openai_task(config, client, system_prompt, task_prompt, content):
 def get_gpt_answer(config, client, system_prompt, task_prompt, content):
     # while gpt answer not fit json format, retry
     is_continue = True
+    counter = 0
     while is_continue:
+        counter += 1
+        if counter != 1:
+            print(f"Retry {counter} times")
         answer = openai_task(config, client, system_prompt, task_prompt, content)
         answer = answer.strip("```json").strip("```").strip()
         try:
