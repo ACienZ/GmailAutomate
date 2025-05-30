@@ -1,7 +1,7 @@
 import json
 
 
-def openai_task(config, client, system_prompt, task_prompt, content):
+def llm_task(config, client, system_prompt, task_prompt, content):
     completion = client.chat.completions.create(
         model=config.ModelSettings.model,
         messages=[
@@ -22,7 +22,7 @@ def openai_task(config, client, system_prompt, task_prompt, content):
     return answer
 
 
-def get_gpt_answer(config, client, system_prompt, task_prompt, content):
+def get_llm_answer(config, client, system_prompt, task_prompt, content):
     # while gpt answer not fit json format, retry
     is_continue = True
     counter = 0
@@ -30,7 +30,9 @@ def get_gpt_answer(config, client, system_prompt, task_prompt, content):
         counter += 1
         if counter != 1:
             print(f"Retry {counter} times")
-        answer = openai_task(config, client, system_prompt, task_prompt, content)
+
+        answer = llm_task(config, client, system_prompt, task_prompt, content)
+
         answer = answer.strip("```json").strip("```").strip()
         try:
             gpt_answer = json.loads(answer)

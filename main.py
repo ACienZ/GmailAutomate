@@ -5,7 +5,7 @@ from simplegmail import Gmail
 from openai import OpenAI
 
 from config.load_config import load_config
-from lib.llm_lib import get_gpt_answer
+from lib.llm_lib import get_llm_answer
 from lib.gmail_lib import reply_email
 
 
@@ -54,7 +54,7 @@ def gmail_automate(
             print(f"Email: {subject}\n from {sender}, has no attachments. \n")
             continue
 
-        # 2. check whether the email is a student submitted assignment with gpt
+        # 2. check whether the email is a student submitted assignment with llm
         content = f"""
         Here is the detail of the email:
         Subject: {subject}
@@ -64,13 +64,13 @@ def gmail_automate(
         Attachment_filenames: {attach_filenames}
         """
 
-        gpt_answer = get_gpt_answer(config, client, system_prompt, task_prompt, content)
-        print("Get GPT Answer:", gpt_answer, "\n")
+        llm_answer = get_llm_answer(config, client, system_prompt, task_prompt, content)
+        print("Get LLM Answer:", llm_answer, "\n")
 
-        if gpt_answer["is_assignment"] != "true":
+        if llm_answer["is_assignment"] != "true":
             continue
         else:
-            if gpt_answer["whether_contain_other_questions"] == "true":
+            if llm_answer["whether_contain_other_questions"] == "true":
                 # create a log corresponding to current assignment number under logs/
                 with open(log_file_name, "a") as f:
                     f.write(f"Sender: {sender}\n")
@@ -78,13 +78,13 @@ def gmail_automate(
                     f.write(f"Date: {send_date}\n")
                     f.write(f"Content: \n{email_content}\n")
                     f.write(f"Attachment_filenames: {attach_filenames}\n")
-                    f.write(f"GPT Answer: {gpt_answer}\n")
+                    f.write(f"LLM Answer: {llm_answer}\n")
                     f.write(f"Problem: exist other questions\n")
                     f.write("-" * 20 + "\n")
                 continue
             else:
                 if (
-                    gpt_answer["assignment_number"]
+                    llm_answer["assignment_number"]
                     != config.AssignmentSettings.assignment_number
                 ):
                     with open(log_file_name, "a") as f:
@@ -93,14 +93,14 @@ def gmail_automate(
                         f.write(f"Date: {send_date}\n")
                         f.write(f"Content: \n{email_content}\n")
                         f.write(f"Attachment_filenames: {attach_filenames}\n")
-                        f.write(f"GPT Answer: {gpt_answer}\n")
+                        f.write(f"LLM Answer: {llm_answer}\n")
                         f.write(f"Problem: Not submitting the correct assignment\n")
                         f.write("-" * 20 + "\n")
                 else:
                     if (
-                        gpt_answer["student_id"] == "unknown"
-                        or gpt_answer["student_first_name"] == "unknown"
-                        or gpt_answer["student_last_name"] == "unknown"
+                        llm_answer["student_id"] == "unknown"
+                        or llm_answer["student_first_name"] == "unknown"
+                        or llm_answer["student_last_name"] == "unknown"
                     ):
                         with open(log_file_name, "a") as f:
                             f.write(f"Sender: {sender}\n")
@@ -108,16 +108,16 @@ def gmail_automate(
                             f.write(f"Date: {send_date}\n")
                             f.write(f"Content: \n{email_content}\n")
                             f.write(f"Attachment_filenames: {attach_filenames}\n")
-                            f.write(f"GPT Answer: {gpt_answer}\n")
+                            f.write(f"LLM Answer: {llm_answer}\n")
                             f.write(f"Problem: student_id or student_name is unknown\n")
                             f.write("-" * 20 + "\n")
                     else:
                         # 3. save the assignment
                         student_folder_name = (
-                            gpt_answer["student_id"]
+                            llm_answer["student_id"]
                             + "_"
-                            + gpt_answer["student_first_name"]
-                            + gpt_answer["student_last_name"]
+                            + llm_answer["student_first_name"]
+                            + llm_answer["student_last_name"]
                         )
                         student_folder_path = os.path.join(
                             config.AssignmentSettings.assignment_save_path,
@@ -203,13 +203,13 @@ def gmail_automate(
                             f.write(f"Date: {send_date}\n")
                             f.write(f"Content: \n{email_content}\n")
                             f.write(f"Attachment_filenames: {attach_filenames}\n")
-                            f.write(f"GPT Answer: {gpt_answer}\n")
+                            f.write(f"LLM Answer: {llm_answer}\n")
 
                             f.write(f"=" * 30 + "\n")
 
                         # 4. reply to the email
                         message_content = (
-                            f"Dear {gpt_answer['student_first_name']} {gpt_answer['student_last_name']}, \n\n"
+                            f"Dear {llm_answer['student_first_name']} {llm_answer['student_last_name']}, \n\n"
                             + reply_message_content
                         )
 
@@ -229,10 +229,13 @@ def gmail_automate(
 def main():
     # set OpenAI API key
     config = load_config()
-    os.environ["OPENAI_API_KEY"] = config.DEEPSEEK.API_KEY
+    if config.ModelSettings.model_type == "deepseek":
+        os.environ["LLM_API_KEY"] = config.DEEPSEEK.API_KEY
+    else:
+        os.environ["LLM_API_KEY"] = config.CHATGPT.API_KEY
     client = OpenAI(
         # This is the default and can be omitted
-        api_key=os.environ.get("OPENAI_API_KEY"),
+        api_key=os.environ.get("LLM_API_KEY"),
         base_url=config.ModelSettings.base_url,
     )
 
@@ -251,6 +254,8 @@ def main():
     Usually, an email to submit an assignment from a studnet, its attachment's filename will follow our requirement, and should be like this: studentId_studentName_NN_assignmentNumber.fileFormat, where NN means the short name of the course neural network.
     For studentId, it usually is a 8-digit number, start from 44 (indicating the institute number), the following 2 digits indicate the year, the following 4 digits are the rest of the studentID. However, because there may be some students from other institutes, the studentId may also include alphabets, like: 5123DG00, or 2025MCB099. So the core idea is to check the beginning of attachment's filename.
 
+    Also you should pay attention to Subject, Content and Attachment_filenames, this parts may contain some important information like assignment_number, student_id, etc. (For example, if the Subject contains "ニューラルネットワーク homework3", the assignment_number is 3; or if the Attachment_filenames contains "NN_2025Assignment2", then the assignment_number is 2.)
+
     Your answer should be a json format, the following is the example of the format, please do follow it and include all the parts of the format:
     {
         "is_assignment": "true",
@@ -260,7 +265,9 @@ def main():
         "student_first_name": "JohnSwe",
         "student_last_name": "DOE"
     }
+
     Note that if you cannot find the assignmentNumber, studentId or studentName, you can just return "unknown" as the assignment_number, student_id, student_first_name or student_last_name.
+    
     As for the studentName, all the characters of the last name MUST be capitalized, while all the characters other than the first character of the first name MUST be lowercase. (However, If a student's first name includes more than one word, you MUST capitalize the first character of each word, and the rest of the characters MUST be lowercase. And all the words of the first name MUST be connected WITHOUT any space or other characters. For example, if a student's first name is "John Swe", you should return "JohnSwe" as the student_first_name.)
 
     """

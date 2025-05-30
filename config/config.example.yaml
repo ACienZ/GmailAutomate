@@ -12,6 +12,7 @@ DEEPSEEK:
   API_KEY: "XXX" # replace XXX by your DeepSeek API KEY
 
 ModelSettings:
+  model_type: "deepseek"
   base_url: "https://api.deepseek.com"
   model: "deepseek-reasoner"
 

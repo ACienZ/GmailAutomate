@@ -18,6 +18,7 @@ class DEEPSEEK(BaseModel):
 
 
 class ModelSettings(BaseModel):
+    model_type: str
     base_url: str
     model: str
 
