@@ -37,6 +37,7 @@ ref:
 - 需要在OAuth权限请求页面添加测试用户
 - 参考:
   - [Access blocked: Project has not completed the Google verification process](https://stackoverflow.com/questions/75454425/access-blocked-project-has-not-completed-the-google-verification-process)
+- 由于gmail api会从最新的邮件开始读取，故如果有学生重复提交相同文件名的附件，将会从9开始重命名重名附件。同一学生同一次作业重复提交超过9次，计数将会变负数。
 
 ## 3. 配置文件设置
 

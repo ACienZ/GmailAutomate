@@ -167,7 +167,7 @@ def gmail_automate(
                             attach.download()
                             # if the attachment name already exist, add a number to the end of the filename
                             whether_loop = True
-                            counter = 1
+                            counter = 9
                             while whether_loop:
                                 if os.path.exists(
                                     os.path.join(
@@ -181,7 +181,7 @@ def gmail_automate(
                                         + "."
                                         + attach.filename.split(".")[1]
                                     )
-                                    counter += 1
+                                    counter -= 1
                                 else:
                                     whether_loop = False
                             with open(

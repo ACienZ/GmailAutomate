@@ -33,6 +33,7 @@ Rename the downloaded credentials file to `client_secret.json` and place it in t
 - You need to add test users on the OAuth permission request page
 - Reference:
   - [Access blocked: Project has not completed the Google verification process](https://stackoverflow.com/questions/75454425/access-blocked-project-has-not-completed-the-google-verification-process)
+- Due to the fact that the Gmail API starts reading from the latest email, if a student repeatedly submits attachments with the same file name, the duplicate attachments will be renamed starting from 9. If the same student submits the same assignment more than 9 times, the count will become negative.
 
 ## 3. Configuration File Setup
 
