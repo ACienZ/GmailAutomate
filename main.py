@@ -252,7 +252,7 @@ def main():
     5. If this is an email to submit an assignment from a student, you need to check the student's name.
 
     Usually, an email to submit an assignment from a studnet, its attachment's filename will follow our requirement, and should be like this: studentId_studentName_NN_assignmentNumber.fileFormat, where NN means the short name of the course neural network.
-    For studentId, it usually is a 8-digit number, start from 44 (indicating the institute number), the following 2 digits indicate the year, the following 4 digits are the rest of the studentID. However, because there may be some students from other institutes, the studentId may also include alphabets, like: 5123DG00, or 2025MCB099. So the core idea is to check the beginning of attachment's filename.
+    For studentId, it usually is a 8-digit number, start from 66 (indicating the institute number), the following 2 digits indicate the year, the following 4 digits are the rest of the studentID. However, because there may be some students from other institutes, the studentId may also include alphabets, like: 5123DG00, or 2025MCB099. So the core idea is to check the beginning of attachment's filename.
 
     Also you should pay attention to Subject, Content and Attachment_filenames, this parts may contain some important information like assignment_number, student_id, etc. (For example, if the Subject contains "ニューラルネットワーク homework3", the assignment_number is 3; or if the Attachment_filenames contains "NN_2025Assignment2", then the assignment_number is 2.)
 
@@ -262,7 +262,7 @@ def main():
         "whether_contain_other_questions": "false",
         "assignment_number": "1",
         "student_id": "1234567890", 
-        "student_first_name": "JohnSwe",
+        "student_first_name": "Alex",
         "student_last_name": "DOE"
     }
 
