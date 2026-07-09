@@ -286,7 +286,7 @@ def main():
     )
 
     reply_message_content = (
-        f"Your assignment has been accepted by an automated script, thank you very much. \n\n If you have any questions, please feel free to contact me. \n(If you need human assistant, please add [Ask for human assistant] at the beginning of the subject)\n\nBest regards, \n"
+        "Your assignment has been accepted by an automated script. Thank you very much. \n\nWhen you submit your assignment, please start a new email instead of replying to an old email thread. \n\nAnd please remember to name your attached file in the format: 'studentID_yourName_NN_assignmentID.zip'.\nOr mention your studentID, yourName, and assignmentID in the title or content. \n\nOtherwise, our automated script may not be able to process your submission.\n\nIf you have any questions, please feel free to contact me. \n(If you need a human assistant, please add [Ask for human assistant] at the beginning of the subject.)\n\nBest regards, \n"
         + f"{config.AssignmentSettings.my_name}"
     )
 

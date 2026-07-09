@@ -11,7 +11,7 @@
 ### 创建并激活Conda环境
 
 ```bash
-conda create -n gmail_automate python=3.8
+conda create -n gmail_automate python=3.12
 conda activate gmail_automate
 ```
 
